@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social</title>
+
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script src="js/app.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script src="js/index.js"></script>
+</head>
+<body>
+
+<div data-role="page" id="index">
+    <div data-role="header">
+        <h1>Social</h1>
+    </div>
+    <div data-role="main">
+        <form id="userDetails">
+            <div class="ui-field-contain">
+                <input type="text" name="emailText" id="emailText" placeholder="Email...">
+                <input type="text" name="passwordText" id="passwordText" placeholder="Password...">
+                <input type="button" name="loginBtn" id="loginBtn" value="Log In">
+                <input type="button" name="signupBtn" id="signupBtn" value="Sign Up">
+            </div>
+        </form>
+    </div>
+    <div data-role="footer" style="text-align: center">
+        <p>Megabite Studios &copy; 2018</p>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div data-role="page" data id="main">
+    <div data-role="header">
+        <h1>Social</h1>
+        <a id="logoutBtn" data-role="button" data-icon="delete" data-iconpos="notext"></a>
+    </div>
+    <div data-role="main" style="padding: 1% 1%;">
+        <!--<p id="welcome-user" style="text-align: center">Welcome</p>-->
+        <div class="ui-grid-a">
+            <div class="ui-block-a" style="padding-right: 1%;">
+                <div data-role="header"><h3>Profile</h3></div>
+                    <div style="padding: 0% 2%;" class="ui-grid-a">
+                        <div class="ui-block-a"><p id="profileDataDisplayName"><h4>Alasdair Hendry</h4></p></div>
+                        <div style="text-align: right;" class="ui-block-b"><h4 id="profileDataRating">Rating 3.57/5.0</h4></div>
+                    </div>
+                    <div class="ui-grid-d">
+                        <div class="ui-block-a"><a data-role="button" data-icon="star" data-iconpos="bottom">1</a></div>
+                        <div class="ui-block-b"><a data-role="button" data-icon="star" data-iconpos="bottom">2</a></div>
+                        <div class="ui-block-c"><a data-role="button" data-icon="star" data-iconpos="bottom">3</a></div>
+                        <div class="ui-block-d"><a data-role="button" data-icon="star" data-iconpos="bottom">4</a></div>
+                        <div class="ui-block-e"><a data-role="button" data-icon="star" data-iconpos="bottom">5</a></div>
+                    </div>
+                <h5 style="text-align: center; margin-top: -2px;">56 ratings today</h5>
+            </div>
+            <div class="ui-block-b" style="padding-left: 1%">
+                <div data-role="header"><h3>Your Location</h3> <a id="locationBtn" class="ui-btn ui-btn-right ui-shadow ui-corner-all ui-icon-location ui-btn-icon-notext"></a></div>
+                <p style="padding: 0% 2%;" id="locationText"></p>
+            </div>
+        </div>
+        <div class="ui-grid-solo">
+            <div class="ui-block-a">
+                <div data-role="header"><h3>Nearby</h3></div>
+                <ul style="padding: 5px;" data-role="listview" id="nearbyList">
+                    <li >
+                        <a href="index.html">
+                            <img style="padding: 5px;" src="images/Jax_Teller_Hair_5_1024x1024.jpg">
+                            <h4>3.51 - Jax Teller</h4>
+                            <p>Currently training at SEP Corp.</p>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="index.html">
+                            <img style="padding: 5px;" src="images/12508768_1239402842743242_7416150312961488191_n.jpg">
+                            <h4>1.51 - Aunt Margerat</h4>
+                            <p>Currently training at WeTrainPilots.com.</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div data-role="footer" style="text-align: center">
+        <p>Megabite Studios &copy; 2018</p>
+    </div>
+</div>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+
+<div data-role="page" data-dialog="true" data-close-btn="none" id="addDisplayNameDialog">
+    <div data-role="header">
+        <h1>Social</h1>
+    </div>
+    <p>Would you like to add a Display Name to your profile? This will let other users identify you!</p>
+    <input type="text" name="displayNameText" id="displayNameText" placeholder="Display Name...">
+    <input type="button" name="confirmDisplayNameBtn" id="confirmDisplayNameBtn" value="Confirm">
+    <input type="button" name="cancelDisplayNameBtn" id="cancelDisplayNameBtn" value="Skip">
+</div>
+
+<div data-role="page" data-dialog="true" data-close-btn="right" id="viewNearbyDialog">
+    <div data-role="header">
+        <h1 id="viewNearbyDisplayName">Social</h1>
+    </div>
+    <div data-role="main" style="padding: 1% 1%; text-align: center">
+    <p>Rate this person if you have came into contact with them!</p>
+        <div class="ui-grid-d">
+            <div class="ui-block-a"><a data-role="button" data-icon="star" data-iconpos="bottom">1</a></div>
+            <div class="ui-block-b"><a data-role="button" data-icon="star" data-iconpos="bottom">2</a></div>
+            <div class="ui-block-c"><a data-role="button" data-icon="star" data-iconpos="bottom">3</a></div>
+            <div class="ui-block-d"><a data-role="button" data-icon="star" data-iconpos="bottom">4</a></div>
+            <div class="ui-block-e"><a data-role="button" data-icon="star" data-iconpos="bottom">5</a></div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
