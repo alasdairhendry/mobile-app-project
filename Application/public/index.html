@@ -3,8 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script src="js/firebase.js"></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
+
+<div data-role="page" id="index-page">
+    <div data-role="header">
+        <h1>Social Ratings App</h1>
+    </div>
+    <div data-role="main" style="padding: 1%">
+        <h1>Log in page</h1>
+    </div>
+</div>
+
+<div data-role="page" id="feed-page">
+    <div data-role="header">
+        <h1>Social Ratings App</h1>
+    </div>
+    <div data-role="main" style="padding: 1%">
+        <h1>Feed page</h1>
+        <span id="welcome-message"></span>
+        <br/>
+        <br/>
+        <span id="your-rating"></span>
+
+        <div id="map"></div>
+
+        <!--<script async defer-->
+                <!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeHvMDcOJAtZWjbBIhc9rK1I549fec_xY&callback=initMap">-->
+        <!--</script>-->
+    </div>
+</div>
 
 </body>
 </html>
