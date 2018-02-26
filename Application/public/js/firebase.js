@@ -38,6 +38,11 @@ $(document).ready(function () {
 
             // Initialize the location fetch for the user
             getLocation();
+
+            if(firebaseUser.photoURL !== null)
+                document.getElementById('profile-picture').src = firebaseUser.photoURL;
+
+            console.log(firebaseUser);
         }
         else
         {
@@ -50,6 +55,30 @@ $(document).ready(function () {
     var ratingListener = firebase.database().ref('users/' + sessionStorage.getItem('userUID'));
     ratingListener.on('value', function(snapshot) {
         calculateUsersRating();
+    });
+
+    var uploader = document.getElementById("profilePictureUploader");
+    var fileButton = document.getElementById("profilePictureUploadBtn");
+
+    fileButton.addEventListener('change', function (e) {
+        // Get the file
+        var file = e.target.files[0];
+
+        // Create a storage reference
+        var storageReference = firebase.storage().ref('images/profiles_pictures/' + sessionStorage.getItem('userUID'));
+
+        // Upload the file
+        var task = storageReference.put(file).then(function (snapshot) {
+            console.log(snapshot.downloadURL);
+            document.getElementById('profile-picture').src = snapshot.downloadURL;
+            firebase.auth().currentUser.updateProfile({
+                photoURL: snapshot.downloadURL
+            }).then(function () {
+
+            }).catch(function (error) {
+                console.log(error);
+            })
+        });
     });
 });
 
@@ -78,11 +107,14 @@ function LoadOrCreate(firebaseUser)
 
             var initialRating = [];
             var initialUID = [];
+            var initialMessage = [];
             initialRating.push(2.5);
             initialUID.push(firebaseUser.uid);
+            initialMessage.push("You rated yourself! Well done!");
             firebase.database().ref("ratings/" + sessionStorage.getItem('userUID')).set({
                 ratings: initialRating,
-                uids: initialUID
+                uids: initialUID,
+                messages: initialMessage
             });
         }
     });
@@ -233,18 +265,24 @@ function toRad(Value)
     return Value * Math.PI / 180;
 }
 
-function rateUser(targetUID, rating)
+function rateUser(targetUID, rating, message)
 {
     firebase.database().ref("ratings/" + targetUID).once('value').then(function (snapshot) {
         var ratings = snapshot.val().ratings;
         var uids = snapshot.val().uids;
+        var messages = snapshot.val().messages;
+
+        if(message === "")
+            message = "no message";
 
         ratings.push(rating);
         uids.push(sessionStorage.getItem('userUID'));
+        messages.push(message);
 
         firebase.database().ref("ratings/" + targetUID).set({
             ratings: ratings,
-            uids: uids
+            uids: uids,
+            messages: messages
         });
 
         var overall = 0;
