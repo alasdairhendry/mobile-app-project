@@ -120,12 +120,6 @@ function LoadOrCreate(firebaseUser)
     });
 }
 
-function rating (uid, rating)
-{
-    this.uid = uid;
-    this.rating = rating;
-}
-
 // Logs in the user with the given email & password
 function userLogin(email, password) {
     const auth = firebase.auth();
