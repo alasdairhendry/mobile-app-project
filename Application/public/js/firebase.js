@@ -22,6 +22,7 @@ var uiConfig = {
     tosUrl: '<your-tos-url>'
 };
 
+// Load the Firebase UI
 function loadFirebaseUI() {
 
     // Initialize the FirebaseUI Widget using Firebase.
@@ -43,12 +44,15 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser)
         {
-            console.log(firebaseUser);
             // If we have a user logged in, store their UID and show the Feed page.
             sessionStorage.setItem('userUID', firebaseUser.uid);
+
+            // We will need to parse the displayName string and split it into two different strings, one for the first and one for the last name
             sessionStorage.setItem('firstName', firebaseUser.displayName);
             sessionStorage.setItem('lastName', firebaseUser.displayName);
             $.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
+
+            // Perform checks on the current user
             LoadOrCreate(firebaseUser);
 
             // Update the snapshot of the database user
@@ -63,20 +67,21 @@ $(document).ready(function () {
             // Initialize the location fetch for the user
             getLocation();
 
+            // If the user has a photoURL, display it on the feed page.
             if(firebaseUser.photoURL !== null)
                 document.getElementById('profile-picture').src = firebaseUser.photoURL;
-
-            console.log(firebaseUser);
         }
         else
         {
             // No user is logged in, return to the initial index page
             $.mobile.changePage('#index-page', {transition: "pop", reverse: true});
+
+            // Load the firebase UI so that the user can login
             loadFirebaseUI();
-            console.log("User Logged Out");
         }
     });
 
+    // Firebase Callback function which listens to the ratings of this users database entry. Whenever their database entries change then we will update their rating
     var ratingListener = firebase.database().ref('users/' + sessionStorage.getItem('userUID'));
     ratingListener.on('value', function(snapshot) {
         calculateUsersRating();
@@ -85,6 +90,7 @@ $(document).ready(function () {
     var uploader = document.getElementById("profilePictureUploader");
     var fileButton = document.getElementById("profilePictureUploadBtn");
 
+    // Configure the button which allows the user to upload an image
     fileButton.addEventListener('change', function (e) {
         // Get the file
         var file = e.target.files[0];
@@ -96,6 +102,8 @@ $(document).ready(function () {
         var task = storageReference.put(file).then(function (snapshot) {
             console.log(snapshot.downloadURL);
             document.getElementById('profile-picture').src = snapshot.downloadURL;
+
+            // Upload the photo url to the current users profile
             firebase.auth().currentUser.updateProfile({
                 photoURL: snapshot.downloadURL
             }).then(function () {
@@ -107,7 +115,7 @@ $(document).ready(function () {
     });
 });
 
-// Check if we currently have the logged in user registers in the real-time database. If not, we create them.
+// Check if we currently have the logged in user registered in the real-time database. If not, we create them.
 function LoadOrCreate(firebaseUser)
 {
     var accountFound = false;
@@ -115,11 +123,13 @@ function LoadOrCreate(firebaseUser)
         snapshot.forEach(function (child) {
             var newItemValue = child.val();
 
+            // We found the user, so we do nothing
             if(newItemValue.uid === firebaseUser.uid)
                 accountFound = true;
         });
 
 
+        // We didnt find this user, so we need to create an entry in the real-time database
         if(!accountFound)
         {
             firebase.database().ref("users/" + sessionStorage.getItem('userUID')).set({
@@ -130,12 +140,16 @@ function LoadOrCreate(firebaseUser)
                 uid: firebaseUser.uid
             });
 
+            // Create the initial rating arrays to store the users data
             var initialRating = [];
             var initialUID = [];
             var initialMessage = [];
+
             initialRating.push(2.5);
             initialUID.push(firebaseUser.uid);
             initialMessage.push("You rated yourself! Well done!");
+
+            // Push this data to the real-time database
             firebase.database().ref("ratings/" + sessionStorage.getItem('userUID')).set({
                 ratings: initialRating,
                 uids: initialUID,
@@ -218,15 +232,6 @@ function getLocation()
 {
     if(navigator.geolocation)
     {
-        // navigator.geolocation.getCurrentPosition(function (position) {
-        //     firebase.database().ref("locations/" + sessionStorage.getItem('userUID')).set({
-        //         latitude: position.coords.latitude,
-        //         longitude: position.coords.longitude,
-        //         uid: sessionStorage.getItem('userUID')
-        //     });
-        //     findNearby(position.coords.latitude, position.coords.longitude);
-        // });
-
         locationWatchOptions = {
             enableHighAccuracy: true,
             timeout: 5000,
@@ -259,7 +264,6 @@ function findNearby(lat, lon)
         for (var i = 0, len = nearby.length; i < len; i++) {
             console.log(calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon) + " distance away");
         }
-        // initMap(lat, lon);
     });
 }
 
@@ -284,9 +288,13 @@ function toRad(Value)
     return Value * Math.PI / 180;
 }
 
+// Rates the target user (targetUID) with the given rating, and leaves a message if provided
 function rateUser(targetUID, rating, message)
 {
+    // First we find the ratings entry from the target users database
     firebase.database().ref("ratings/" + targetUID).once('value').then(function (snapshot) {
+
+        // Collate the data
         var ratings = snapshot.val().ratings;
         var uids = snapshot.val().uids;
         var messages = snapshot.val().messages;
@@ -298,6 +306,7 @@ function rateUser(targetUID, rating, message)
         uids.push(sessionStorage.getItem('userUID'));
         messages.push(message);
 
+        // Push this new data to the target users database
         firebase.database().ref("ratings/" + targetUID).set({
             ratings: ratings,
             uids: uids,
@@ -370,7 +379,6 @@ function watchPositionSucess(position) {
 
     // Update nearby users as location has changed
     findNearby(position.coords.latitude, position.coords.longitude);
-    // initMap(position.coords.latitude, position.coords.longitude);
     console.log("Position Watch Returned");
 }
 
@@ -378,32 +386,6 @@ function watchPositionError(err) {
     console.warn('ERROR(' + err.code + '): ' + err.message);
 }
 
-//
-// function initMap(lat, lon) {
-//     var position = {lat: lat, lng: lon};
-//     var map = new google.maps.Map(document.getElementById('map'), {
-//         zoom: 16,
-//         center: position
-//     });
-//     var marker = new google.maps.Marker({
-//         position: position,
-//         map: map,
-//         title: 'You'
-//     });
-//
-//     for (var i = 0, len = nearby.length; i < len; i++) {
-//         var mPosition = {lat: nearby[i].latitude, lng: nearby[i].longitude};
-//         var mMarker = new google.maps.Marker({
-//             position: mPosition,
-//             map: map,
-//             title: calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon).toString()
-//         });
-//         // console.log(calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon) + " distance away");
-//     }
-//
-//     console.log("map made");
-//
-// }
 
 // The following is a debug snippet to delete all user accounts
 var intervalId;
