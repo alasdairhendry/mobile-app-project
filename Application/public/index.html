@@ -10,6 +10,10 @@
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
+    <!--Firebase Ui Plugin-->
+    <script src="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.css" />
+
     <script src="js/firebase.js"></script>
     <style>
         #map {
@@ -21,12 +25,14 @@
 <body>
 
 <div data-role="page" id="index-page">
-    <div data-role="header">
-        <h1>Social Ratings App</h1>
-    </div>
-    <div data-role="main" style="padding: 1%">
-        <h1>Log in page</h1>
-    </div>
+    <!--<div data-role="header">-->
+        <!--<h1>Social Ratings App</h1>-->
+    <!--</div>-->
+    <!--<div data-role="main" style="padding: 1%">-->
+        <!--<h1>Log in page</h1>-->
+        <!--<input type="button" data-role="button" onclick="loadFirebaseUI()" value="Sign In">-->
+    <!--</div>-->
+    <div id="firebaseui-auth-container"></div>
 </div>
 
 <div data-role="page" id="feed-page">
@@ -45,7 +51,7 @@
         <p>Upload a profile picture.</p>
         <progress value="0" max="100" id="profilePictureUploader">0%</progress>
         <input type="file" value="Upload" id="profilePictureUploadBtn" accept=".jpeg, .png, .jpg, .gif">
-        <div id="map"></div>
+        <input type="button" data-role="button" value="log out" onclick="userLogout()">
 
         <!--<script async defer-->
                 <!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeHvMDcOJAtZWjbBIhc9rK1I549fec_xY&callback=initMap">-->

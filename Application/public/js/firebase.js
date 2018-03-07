@@ -9,6 +9,27 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// FirebaseUI config.
+var uiConfig = {
+    // signInSuccessUrl: ('#loggedin-page'),
+    signInSuccessUrl: ('http://localhost:63342/Application/public/index.html?_ijt=bl708ne3e63h5e4u9ujj8p6naj'),
+    signInOptions: [
+        // Leave the lines as is for the providers you want to offer your users.
+
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+    ],
+    // Terms of service url.
+    tosUrl: '<your-tos-url>'
+};
+
+function loadFirebaseUI() {
+
+    // Initialize the FirebaseUI Widget using Firebase.
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+// The start method will wait until the DOM is loaded.
+    ui.start('#firebaseui-auth-container', uiConfig);
+}
+
 var nearby = [];
 var databaseUserSnapshot;
 var nearbyUserDistanceThreshold = 0.1;
@@ -22,8 +43,11 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser)
         {
+            console.log(firebaseUser);
             // If we have a user logged in, store their UID and show the Feed page.
             sessionStorage.setItem('userUID', firebaseUser.uid);
+            sessionStorage.setItem('firstName', firebaseUser.displayName);
+            sessionStorage.setItem('lastName', firebaseUser.displayName);
             $.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
             LoadOrCreate(firebaseUser);
 
@@ -48,6 +72,7 @@ $(document).ready(function () {
         {
             // No user is logged in, return to the initial index page
             $.mobile.changePage('#index-page', {transition: "pop", reverse: true});
+            loadFirebaseUI();
             console.log("User Logged Out");
         }
     });
@@ -379,7 +404,6 @@ function watchPositionError(err) {
 //     console.log("map made");
 //
 // }
-
 
 // The following is a debug snippet to delete all user accounts
 var intervalId;
