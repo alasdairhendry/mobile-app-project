@@ -9,10 +9,15 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var isNew = true; // boolean for ternary operator set in uiConfig below that will be flagged when newUser, needs set properly though, just hardcoded here to show my idea,
+                // I think the profile pic is an essential component so the user should be forced to upload a pic on account creation.
+//var isNew = false; // set to false to check ternary operator directs to testHome-page;
+
 // FirebaseUI config.
 var uiConfig = {
     // signInSuccessUrl: ('#loggedin-page'),
-    signInSuccessUrl: ('http://localhost:63342/Application/public/index.html?_ijt=bl708ne3e63h5e4u9ujj8p6naj'),
+    /*signInSuccessUrl: ('http://localhost:63342/Application/public/index.html?_ijt=bl708ne3e63h5e4u9ujj8p6naj'),*/
+    signInSuccessUrl: (isNew ? '#feed-page':'#testHome-page'), // ternary operator to determine if redirect depending on new user
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
 
@@ -37,6 +42,8 @@ var nearbyUserDistanceThreshold = 0.1;
 var locationWatch;
 var locationWatchOptions;
 
+loadFirebaseUI(); // added this here to load the authUI
+
 $(document).ready(function () {
 
     // Called on the client when the state of any user is changed (e.g if they log in or log out).
@@ -44,13 +51,21 @@ $(document).ready(function () {
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if(firebaseUser)
         {
+
             // If we have a user logged in, store their UID and show the Feed page.
             sessionStorage.setItem('userUID', firebaseUser.uid);
 
             // We will need to parse the displayName string and split it into two different strings, one for the first and one for the last name
-            sessionStorage.setItem('firstName', firebaseUser.displayName);
+            /*sessionStorage.setItem('firstName', firebaseUser.displayName);
             sessionStorage.setItem('lastName', firebaseUser.displayName);
-            $.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
+            //$.mobile.changePage('#feed-page', {transition : "pop", reverse : true});*/ //removed this line as the auth automatically takes you there in th ternary statement
+            var fullName = firebaseUser.displayName;                                    // set variable fullname to current display name
+            var space = fullName.lastIndexOf(' ');                                      // space set to help substring determine second name from fullName
+            var firstName = fullName.split(' ').slice(0, -1).join(' ');                 // use split() to extract firstName from fullName
+            var lastName = fullName.substring(space+1);                                 // use substring to extract lastName from fullName
+            sessionStorage.setItem('firstName', firstName);
+            sessionStorage.setItem('lastName', lastName);
+            //$.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
 
             // Perform checks on the current user
             LoadOrCreate(firebaseUser);
@@ -59,8 +74,13 @@ $(document).ready(function () {
             getDatabaseUserSnap();
 
             // Update the welcome message
-            firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
+            /*firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
                 $('#welcome-message').html("<b>Welcome,</b> " + snapshot.val().firstName + " " + snapshot.val().lastName + "!");
+                console.log("User Logged In " + snapshot.val().email)
+            });*/
+            firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
+                $('#welcome-message').html("<b>Welcome,</b> " + firstName + " " + lastName + "!"); //changed these here from snapshot.val().firstName to variables firstName/lastName
+                //$('#welcome-message').html("<b>Welcome,</b> " + snapshot.val().firstName + " " + snapshot.val().lastName + "!");
                 console.log("User Logged In " + snapshot.val().email)
             });
 
