@@ -9,15 +9,15 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var isNew = true; // boolean for ternary operator set in uiConfig below that will be flagged when newUser, needs set properly though, just hardcoded here to show my idea,
+//var isNew = true; // boolean for ternary operator set in uiConfig below that will be flagged when newUser, needs set properly though, just hardcoded here to show my idea,
                 // I think the profile pic is an essential component so the user should be forced to upload a pic on account creation.
 //var isNew = false; // set to false to check ternary operator directs to testHome-page;
 
 // FirebaseUI config.
 var uiConfig = {
     // signInSuccessUrl: ('#loggedin-page'),
-    /*signInSuccessUrl: ('http://localhost:63342/Application/public/index.html?_ijt=bl708ne3e63h5e4u9ujj8p6naj'),*/
-    signInSuccessUrl: (isNew ? '#feed-page':'#testHome-page'), // ternary operator to determine if redirect depending on new user
+    signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
+    
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
 
@@ -42,7 +42,7 @@ var nearbyUserDistanceThreshold = 0.1;
 var locationWatch;
 var locationWatchOptions;
 
-loadFirebaseUI(); // added this here to load the authUI
+// loadFirebaseUI(); // added this here to load the authUI
 
 $(document).ready(function () {
 
@@ -65,13 +65,14 @@ $(document).ready(function () {
             var lastName = fullName.substring(space+1);                                 // use substring to extract lastName from fullName
             sessionStorage.setItem('firstName', firstName);
             sessionStorage.setItem('lastName', lastName);
-            //$.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
+            $.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
 
             // Perform checks on the current user
             LoadOrCreate(firebaseUser);
 
             // Update the snapshot of the database user
             getDatabaseUserSnap();
+            calculateUsersRating();
 
             // Update the welcome message
             /*firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
@@ -80,7 +81,7 @@ $(document).ready(function () {
             });*/
             firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
                 $('#welcome-message').html("<b>Welcome,</b> " + firstName + " " + lastName + "!"); //changed these here from snapshot.val().firstName to variables firstName/lastName
-                //$('#welcome-message').html("<b>Welcome,</b> " + snapshot.val().firstName + " " + snapshot.val().lastName + "!");
+
                 console.log("User Logged In " + snapshot.val().email)
             });
 
@@ -96,6 +97,7 @@ $(document).ready(function () {
             // No user is logged in, return to the initial index page
             $.mobile.changePage('#index-page', {transition: "pop", reverse: true});
 
+            console.log("User logged out");
             // Load the firebase UI so that the user can login
             loadFirebaseUI();
         }
@@ -234,6 +236,7 @@ function getDatabaseUserSnap()
 {
     firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
         databaseUserSnapshot = snapshot.val();
+        return snapshot.val();
     });
 }
 
