@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
+    <!--Firebase link -->
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
     <!--Firebase Ui Plugin-->
@@ -15,63 +14,175 @@
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.css" />
 
     <script src="js/firebase.js"></script>
+
+
+
+    <meta charset="UTF-8">
     <style>
-        #map {
-            height: 400px;
-            width: 100%;
+
+
+        #myprofile{
+            background: #e1dfdd;
         }
+
+        .dropbtn {
+
+            padding: 16px;
+            border: none;
+            align:right;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #000000;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            padding: 12px 16px;
+            display: block;
+            font-size: 12px;
+        }
+
+        .dropdown a:hover {background-color: #0e0d0c
+        }
+
+        .show {display:block;}
     </style>
+    <title>Title</title>
 </head>
 <body>
-
+<!------------------------------------index Page------------------------->
 <div data-role="page" id="index-page">
-    <!--<div data-role="header">-->
-        <!--<h1>Social Ratings App</h1>-->
-    <!--</div>-->
-    <!--<div data-role="main" style="padding: 1%">-->
-        <!--<h1>Log in page</h1>-->
-        <!--<input type="button" data-role="button" onclick="loadFirebaseUI()" value="Sign In">-->
-    <!--</div>-->
     <div id="firebaseui-auth-container"></div>
 </div>
+<!------------------------------------Profile Page----------------------->
+<div data-role="page" id="myprofile">
+    <div data-role="header" data-theme="b">
+        <h1>Social Ratings</h1>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn" data-icon="home"></button>
+            <div id="myDropdown" class="dropdown-content" >
+                <a href="#NearbyUsers"  style="color: #fffdfb; text-decoration: none;">Find nearby users</a>
+                <a href="#" onclick="userLogout(); return false;" style="color: #fffdfb; text-decoration: none;">Logout</a>
+            </div>
+        </div>
 
-<div data-role="page" id="feed-page">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <div data-role="header">
-        <h1>Social Ratings App</h1>
+                                         
     </div>
-    <div data-role="main" style="padding: 1%">
-        <h1>Feed page</h1>
-        <div style="padding: 5px; border-radius: 50%; border-width: 2px; border-style: dotted; width: 100px; height: 100px; display: inline-block;">
-            <img id="profile-picture" src="images/blank_profile.png" style="border-radius: 50%; width: 100%; height: 100%">
+    <br>
+    <div data-role="main">
+        <div style="padding-right: 1%; padding-left: 1%; ">
+            <div data-role="header" data-theme="b"><h3><span id="welcome-message"></span></h3></div>
+            <!--<span id="welcome-message"></span>-->
         </div>
-        <span id="welcome-message"></span>
-        <br/>
-        <br/>
-        <span id="your-rating"></span>
-        <div id="ProfilePicBtnDiv">
-            <p id="profilePicText">Upload a profile picture.</p>
-            <progress value="0" max="100" id="profilePictureUploader">0%</progress>
-            <input type="file" value="Upload" id="profilePictureUploadBtn" accept=".jpeg, .png, .jpg, .gif">
-        </div>
-        <input type="button" data-role="button" value="log out" onclick="userLogout()">
+    </div>
 
-        <!--<script async defer-->
-                <!--src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeHvMDcOJAtZWjbBIhc9rK1I549fec_xY&callback=initMap">-->
-        <!--</script>-->
+    <div style="padding: 15px 10px 10px 0px; width: 100%; height: auto;" >
+        <div> <img src="http://bootdey.com/img/Content/avatar/avatar7.png" class="img-rounded" style="width: 100%; height:auto; border-radius: 50%;" ></div>
+    </div>
+
+    <div data-role="content" data-theme="b"> <h3 align="center">Your Stats</h3>
+        <div class="ui-grid-a" >
+            <div class="ui-block-a" style="padding-left: 10%;">Your Average Rating</div>
+            <div class="ui-block-b" style="padding-right: 1%; text-align: center;"><span id="your-rating"></span></div>
+        </div>
+    <br>
+    <div class="ui-grid-a">
+        <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
+        <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
+    </div></div>
+
+</div>
+<!-------------------------------------------------------------------------->
+
+<div data-role="page" id="profile">
+    <div data-role="header" data-theme="b">
+        <h1>Social Ratings</h1>
+        <a href="#myprofile" data-icon="home" class="ui-btn-right ui-btn-icon-right">
+        <span class="ui-btn-inner ui-btn-corner-all">
+
+            <span class="ui-icon ui-icon-home"></span>
+        </span></a>
+    </div>
+    <br>
+    <div data-role="main">
+        <div style="padding-right: 1%; padding-left: 1%; ">
+            <div data-role="header" data-theme="b"><h3>UserName</h3></div>
+        </div>
+    </div>
+    <div style="padding: 15px 10px 10px 0px; width: 100%; height: auto;" >
+        <div> <img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 100%; height:auto; border-radius: 50%;" ></div>
+    </div>
+    <div class="ui-grid-d">
+        <div class="ui-block-a"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star1">1</a></div>
+        <div class="ui-block-b"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star2">2</a></div>
+        <div class="ui-block-c"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star3">3</a></div>
+        <div class="ui-block-d"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star4">4</a></div>
+        <div class="ui-block-e"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star5">5</a></div>
+    </div>
+
+    <div data-role="content" data-theme="b"> <h4 align="center">Users Stats</h4>
+        <div class="ui-grid-a" >
+            <div class="ui-block-a" style="padding-left: 10%;">User Average Rating</div>
+            <div class="ui-block-b" style="padding-right: 1%; text-align: center;">2.5</div>
+        </div>
+        <br>
+        <div class="ui-grid-a">
+            <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
+            <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
+        </div></div>
+
+</div>
+<!------------------------------------------------------------------------->
+<div data-role="page" id="NearbyUsers">
+    <div data-role="header" data-theme="b">
+        <h1>Social Ratings</h1>
+    </div>
+
+    <div class="ui-grid-a">
+        <div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 60%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
+        <div class="ui-block-b"style="width: 50%; height:auto; padding-top: 5px;"><a href="#profile" data-role="button" >User's name</a></div>
+        <br>
+        <div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 33%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
+        <div class="ui-block-b"style="width: 33%; height:auto; padding-top: 10px;">User's name</div>
+        <br>
+        <div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 33%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
+        <div class="ui-block-b"style="width: 33%; height:auto; padding-top: 10px;">User's name</div>
+
+
     </div>
 </div>
 
-<div data-role="page" id="testHome-page">
-    <div data-role="header">
-        <h1>Home</h1>
-    </div>
+<!--JavaScript Code for the dropdown menu-->
+<script>
 
-        <h1>Welcome to the home page</h1>';
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
 
+       window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
 
-    <input type="button" data-role="button" value="log out" onclick="userLogout()">
-</div>
-
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
 </body>
 </html>

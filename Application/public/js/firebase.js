@@ -13,8 +13,8 @@ firebase.initializeApp(config);
 
 // FirebaseUI config.
 var uiConfig = {
-    // signInSuccessUrl: ('#loggedin-page'),
-    signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
+    signInSuccessUrl: ('#index-page'),
+    //signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
 
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
@@ -41,6 +41,8 @@ var locationWatch;
 var locationWatchOptions;
 
 
+
+
 $(document).ready(function () {
 
     // Called on the client when the state of any user is changed (e.g if they log in or log out).
@@ -62,7 +64,7 @@ $(document).ready(function () {
             var lastName = fullName.substring(space+1);                                 // use substring to extract lastName from fullName
             sessionStorage.setItem('firstName', firstName);
             sessionStorage.setItem('lastName', lastName);
-            $.mobile.changePage('#feed-page', {transition : "pop", reverse : true});
+            $.mobile.changePage('#myprofile', {transition : "pop", reverse : true});
 
             // Perform checks on the current user
             LoadOrCreate(firebaseUser);
@@ -409,7 +411,7 @@ function calculateUsersRating() {
             });
         });
 
-        $('#your-rating').html("Your rating is " + userRating + "!");
+        $('#your-rating').html(userRating);
     });
 }
 
