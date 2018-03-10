@@ -9,15 +9,13 @@ var config = {
 };
 firebase.initializeApp(config);
 
-//var isNew = true; // boolean for ternary operator set in uiConfig below that will be flagged when newUser, needs set properly though, just hardcoded here to show my idea,
-                // I think the profile pic is an essential component so the user should be forced to upload a pic on account creation.
-//var isNew = false; // set to false to check ternary operator directs to testHome-page;
+
 
 // FirebaseUI config.
 var uiConfig = {
     // signInSuccessUrl: ('#loggedin-page'),
     signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
-    
+
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
 
@@ -42,7 +40,6 @@ var nearbyUserDistanceThreshold = 0.1;
 var locationWatch;
 var locationWatchOptions;
 
-// loadFirebaseUI(); // added this here to load the authUI
 
 $(document).ready(function () {
 
@@ -75,12 +72,8 @@ $(document).ready(function () {
             calculateUsersRating();
 
             // Update the welcome message
-            /*firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
-                $('#welcome-message').html("<b>Welcome,</b> " + snapshot.val().firstName + " " + snapshot.val().lastName + "!");
-                console.log("User Logged In " + snapshot.val().email)
-            });*/
             firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
-                $('#welcome-message').html("<b>Welcome,</b> " + firstName + " " + lastName + "!"); //changed these here from snapshot.val().firstName to variables firstName/lastName
+                $('#welcome-message').html("<b>Welcome,</b> " + firstName + " " + lastName + "!");
 
                 console.log("User Logged In " + snapshot.val().email)
             });
@@ -91,6 +84,9 @@ $(document).ready(function () {
             // If the user has a photoURL, display it on the feed page.
             if(firebaseUser.photoURL !== null)
                 document.getElementById('profile-picture').src = firebaseUser.photoURL;
+
+            //DEBUG_SendLocation(lat, lon);
+            //findNearby()
         }
         else
         {
@@ -117,6 +113,8 @@ $(document).ready(function () {
         // Get the file
         var file = e.target.files[0];
 
+        //document.getElementById("ProfilePicBtnDiv").style.display = "none";
+
         // Create a storage reference
         var storageReference = firebase.storage().ref('images/profiles_pictures/' + sessionStorage.getItem('userUID'));
 
@@ -133,7 +131,11 @@ $(document).ready(function () {
             }).catch(function (error) {
                 console.log(error);
             })
+
         });
+        // hide profile pic button div on change
+        document.getElementById("ProfilePicBtnDiv").style.display = "none";
+        //getDatabaseUserSnap();
     });
 });
 
@@ -146,8 +148,15 @@ function LoadOrCreate(firebaseUser)
             var newItemValue = child.val();
 
             // We found the user, so we do nothing
-            if(newItemValue.uid === firebaseUser.uid)
+            if(newItemValue.uid === firebaseUser.uid) {
                 accountFound = true;
+
+                // Hide "load profile Picture div"
+                if(firebaseUser.photoURL !== null) {
+                    document.getElementById("ProfilePicBtnDiv").style.display = "none";
+                    document.getElementById("profile-picture").addEventListener("click", ShowProfilePicButton);
+                }
+            }
         });
 
 
@@ -180,6 +189,18 @@ function LoadOrCreate(firebaseUser)
         }
     });
 }
+
+function ShowProfilePicButton()
+{
+    // Show "load profile Picture div" onclick of profile pic
+    var x = document.getElementById("ProfilePicBtnDiv");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
 
 // Logs in the user with the given email & password
 function userLogin(email, password) {

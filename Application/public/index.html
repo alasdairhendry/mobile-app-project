@@ -36,6 +36,7 @@
 </div>
 
 <div data-role="page" id="feed-page">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <div data-role="header">
         <h1>Social Ratings App</h1>
     </div>
@@ -48,9 +49,11 @@
         <br/>
         <br/>
         <span id="your-rating"></span>
-        <p>Upload a profile picture.</p>
-        <progress value="0" max="100" id="profilePictureUploader">0%</progress>
-        <input type="file" value="Upload" id="profilePictureUploadBtn" accept=".jpeg, .png, .jpg, .gif">
+        <div id="ProfilePicBtnDiv">
+            <p id="profilePicText">Upload a profile picture.</p>
+            <progress value="0" max="100" id="profilePictureUploader">0%</progress>
+            <input type="file" value="Upload" id="profilePictureUploadBtn" accept=".jpeg, .png, .jpg, .gif">
+        </div>
         <input type="button" data-role="button" value="log out" onclick="userLogout()">
 
         <!--<script async defer-->
