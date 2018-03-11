@@ -412,7 +412,20 @@ function calculateUsersRating() {
         });
 
         $('#your-rating').html(userRating);
+
+        /*var ratingsRecieved = firebase.database().ref("ratings/"
+            + sessionStorage.getItem('userUID')).ratings.numChildren();
+
+        $('#ratings-recieved').html(ratingsRecieved);*/
     });
+}
+
+function ratingsRecieved()
+{
+    /*var ratingsRecieved = firebase.database().ref("ratings/"
+        + sessionStorage.getItem('userUID')).get(ratings.length);
+    $('#ratings-recieved').html(ratingsRecieved);*/
+
 }
 
 // When called, this updates the users location
@@ -430,6 +443,60 @@ function watchPositionSucess(position) {
 
 function watchPositionError(err) {
     console.warn('ERROR(' + err.code + '): ' + err.message);
+}
+
+function ProfilePageMenuFunction() {
+    document.getElementById("myDropdown").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+function OthersProfilePageMenuFunction() {
+    document.getElementById("profileDropdown").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
+}
+
+function NearbyUsersMenuFunction() {
+    document.getElementById("NearbyDropdown").classList.toggle("show");
+}
+
+window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
+        }
+    }
 }
 
 

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!--Firebase link -->
+    <!--Firebase Libraries -->
     <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
 
+    <!--JQuery and JQuery Mobile Libraries-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -13,6 +14,7 @@
     <script src="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.js"></script>
     <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.6.1/firebaseui.css" />
 
+    <!--Apps javascript call-->
     <script src="js/firebase.js"></script>
 
 
@@ -92,7 +94,7 @@
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn" data-icon="bullets"></button>
+            <button onclick="ProfilePageMenuFunction()" class="dropbtn" data-icon="bullets"></button>
             <div id="myDropdown" class="dropdown-content" >
                 <a href="#NearbyUsers"  style="color: #fffdfb; text-decoration: none;">Find nearby users</a>
                 <a href="#" onclick="userLogout(); return false;" style="color: #fffdfb; text-decoration: none;">Logout</a>
@@ -127,7 +129,7 @@
     <br>
     <div class="ui-grid-a">
         <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
-        <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
+        <div class="ui-block-b" style="padding-right: 1%; text-align: center;"><span id="ratings-recieved"></div>
     </div></div>
     <br>
 
@@ -142,7 +144,7 @@
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
         <span class="dropdown"  >
-            <button onclick="myFunction2()" class="dropbtn" data-icon="bullets"></button>
+            <button onclick="OthersProfilePageMenuFunction()" class="dropbtn" data-icon="bullets"></button>
             <span id="profileDropdown" class="dropdown-content" >
                 <a href="#myprofile"  style="color: #fffdfb; text-decoration: none;">Home</a>
                 <a href="Logout" style="color: #fffdfb; text-decoration: none;">Logout</a>
@@ -188,7 +190,7 @@
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
         <span class="dropdown"  >
-            <button onclick="myFunction3()" class="dropbtn" data-icon="bullets"></button>
+            <button onclick="NearbyUsersMenuFunction()" class="dropbtn" data-icon="bullets"></button>
             <span id="NearbyDropdown" class="dropdown-content" >
                 <a href="#myprofile"  style="color: #fffdfb; text-decoration: none;">Home</a>
                 <a href="Logout" style="color: #fffdfb; text-decoration: none;">Logout</a>
@@ -215,62 +217,5 @@
     </div>
 </div>
 
-<!--JavaScript Code for the dropdown menu-->
-<script>
-
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-       window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-
-    function myFunction2() {
-        document.getElementById("profileDropdown").classList.toggle("show");
-    }
-
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-
-    function myFunction3() {
-        document.getElementById("NearbyDropdown").classList.toggle("show");
-    }
-
-    window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
-            }
-        }
-    }
-</script>
 </body>
 </html>
