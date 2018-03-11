@@ -22,24 +22,36 @@
 
 
         #myprofile{
-            background: #e1dfdd;
+            background: #149928;
+        }
+
+        #profile{
+            background: #ff0005;
+        }
+        #NearbyUsers{
+            background: #d5d6d3;
         }
 
         .dropbtn {
-
+            position: fixed;
+            top:0px;
+            right: 5px;
             padding: 16px;
             border: none;
             align:right;
         }
 
         .dropdown {
-            position: relative;
+            position: fixed;
             display: inline-block;
+            right: 5px;
+            z-index: 1;
         }
 
         .dropdown-content {
             display: none;
             position: absolute;
+            right: 5px;
             background-color: #000000;
             min-width: 160px;
             overflow: auto;
@@ -56,7 +68,17 @@
         .dropdown a:hover {background-color: #0e0d0c
         }
 
-        .show {display:block;}
+        .show {
+            display:block;
+        }
+
+        #footer {
+            position:absolute;
+            bottom:0;
+            width:100%;
+            height:60px;   /* Height of the footer */
+            background: #000000;
+        }
     </style>
     <title>Title</title>
 </head>
@@ -70,7 +92,7 @@
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
         <div class="dropdown">
-            <button onclick="myFunction()" class="dropbtn" data-icon="home"></button>
+            <button onclick="myFunction()" class="dropbtn" data-icon="bullets"></button>
             <div id="myDropdown" class="dropdown-content" >
                 <a href="#NearbyUsers"  style="color: #fffdfb; text-decoration: none;">Find nearby users</a>
                 <a href="#" onclick="userLogout(); return false;" style="color: #fffdfb; text-decoration: none;">Logout</a>
@@ -107,18 +129,25 @@
         <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
         <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
     </div></div>
+    <br>
+
+    <div data-role="footer" data-theme="b" style="text-align: center">
+        <p>Footer</p>
+    </div>
 
 </div>
-<!-------------------------------------------------------------------------->
+<!-----------------------------------Others profile--------------------------------------->
 
 <div data-role="page" id="profile">
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
-        <a href="#myprofile" data-icon="home" class="ui-btn-right ui-btn-icon-right">
-        <span class="ui-btn-inner ui-btn-corner-all">
-
-            <span class="ui-icon ui-icon-home"></span>
-        </span></a>
+        <span class="dropdown"  >
+            <button onclick="myFunction2()" class="dropbtn" data-icon="bullets"></button>
+            <span id="profileDropdown" class="dropdown-content" >
+                <a href="#myprofile"  style="color: #fffdfb; text-decoration: none;">Home</a>
+                <a href="Logout" style="color: #fffdfb; text-decoration: none;">Logout</a>
+            </span>
+        </span>
     </div>
     <br>
     <div data-role="main">
@@ -146,15 +175,27 @@
         <div class="ui-grid-a">
             <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
             <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
-        </div></div>
+        </div>
+    </div>
+    <br>
 
+    <div data-role="footer" data-theme="b" style="text-align: center">
+        <p>Footer</p>
+    </div>
 </div>
-<!------------------------------------------------------------------------->
+<!----------------------------------Nearby Users--------------------------------------->
 <div data-role="page" id="NearbyUsers">
     <div data-role="header" data-theme="b">
         <h1>Social Ratings</h1>
+        <span class="dropdown"  >
+            <button onclick="myFunction3()" class="dropbtn" data-icon="bullets"></button>
+            <span id="NearbyDropdown" class="dropdown-content" >
+                <a href="#myprofile"  style="color: #fffdfb; text-decoration: none;">Home</a>
+                <a href="Logout" style="color: #fffdfb; text-decoration: none;">Logout</a>
+            </span>
+        </span>
     </div>
-
+    <br>
     <div class="ui-grid-a">
         <div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 60%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
         <div class="ui-block-b"style="width: 50%; height:auto; padding-top: 5px;"><a href="#profile" data-role="button" >User's name</a></div>
@@ -164,8 +205,13 @@
         <br>
         <div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 33%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
         <div class="ui-block-b"style="width: 33%; height:auto; padding-top: 10px;">User's name</div>
+        <br>
 
+    </div>
+    <br>
 
+    <div id="footer" data-role="footer" data-theme="b" style="text-align: center">
+        <p>Footer</p>
     </div>
 </div>
 
@@ -177,6 +223,42 @@
     }
 
        window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    function myFunction2() {
+        document.getElementById("profileDropdown").classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.dropbtn')) {
+
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+
+    function myFunction3() {
+        document.getElementById("NearbyDropdown").classList.toggle("show");
+    }
+
+    window.onclick = function(event) {
         if (!event.target.matches('.dropbtn')) {
 
             var dropdowns = document.getElementsByClassName("dropdown-content");
