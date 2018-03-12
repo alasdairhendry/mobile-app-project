@@ -39,6 +39,8 @@ var databaseUserSnapshot;
 var nearbyUserDistanceThreshold = 0.1;
 var locationWatch;
 var locationWatchOptions;
+//var lat;
+//var lon;
 
 
 
@@ -87,8 +89,8 @@ $(document).ready(function () {
             if(firebaseUser.photoURL !== null)
                 document.getElementById('profile-picture').src = firebaseUser.photoURL;
 
-            //DEBUG_SendLocation(lat, lon);
-            //findNearby()
+            DEBUG_SendLocation(lat, lon);
+            findNearby()
         }
         else
         {
@@ -306,10 +308,16 @@ function findNearby(lat, lon)
             }
         });
 
+
         console.log(nearby.length + " Users Nearby");
         for (var i = 0, len = nearby.length; i < len; i++) {
+            /*firebase.database.ref(nearby[i].once('value').then(function(snapshot){
+
+            }*/
+            console.log(nearby[i].uid);
             console.log(calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon) + " distance away");
         }
+
     });
 }
 
