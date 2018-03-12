@@ -308,12 +308,41 @@ function findNearby(lat, lon)
             }
         });
 
+        // Create div to hold "nearby users" image and rate button
+        var block  = document.createElement('div');
+
+
+        // Append the newly created  "nearby users" div to "nearbyUserList" div in html
+        document.getElementById('nearbyUserList').appendChild(block);
+
+        // Broken code to get user profiles related to uid of "nearby user"
+        //const rootRef = firebase.database().ref("users");
 
         console.log(nearby.length + " Users Nearby");
         for (var i = 0, len = nearby.length; i < len; i++) {
-            /*firebase.database.ref(nearby[i].once('value').then(function(snapshot){
+            // Broken code to get user profiles related to uid of "nearby user"
+            //var name = rootRef.child(nearby[i].uid).child('firstName').val();
 
-            }*/
+
+            var elem = document.createElement("img");               // Create placeholder for "nearby user" image
+            var SelectUserBtn = document.createElement("BUTTON");   // Create rate user button for "nearby user"
+            var btnText = document.createTextNode(nearby[i].uid);   // Set text for "nearby user" rate user button
+
+            // Append "nearby user" image to div and set attributes
+            block.appendChild(elem);
+            elem.setAttribute("src", "http://bootdey.com/img/Content/avatar/avatar5.png");
+            elem.setAttribute("class", "img-rounded");
+            elem.setAttribute("style", "width: 60%; height:auto; border-radius: 50%; padding-top: 10px;");
+
+            // Append "nearby user" rate user button to div and set attributes
+            block.appendChild(SelectUserBtn);
+            SelectUserBtn.setAttribute("href", "#profile");
+            SelectUserBtn.setAttribute("data-role", "button");
+            SelectUserBtn.appendChild(btnText);
+
+            //document.write("\n");
+
+            console.log(name);
             console.log(nearby[i].uid);
             console.log(calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon) + " distance away");
         }
