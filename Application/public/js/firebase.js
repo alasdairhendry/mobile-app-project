@@ -13,9 +13,9 @@ firebase.initializeApp(config);
 
 // FirebaseUI config.
 var uiConfig = {
-    signInSuccessUrl: ('#index-page'),
+    //signInSuccessUrl: ('#index-page'),
     //signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
-
+    signInSuccessUrl: ('http://localhost:63342/Mobile App Assessment/mobile-app-project/Application/public/index.html?_ijt=l3fi3pemeps04paur9vduqm18g'),
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
 
@@ -308,6 +308,11 @@ function findNearby(lat, lon)
             }
         });
 
+        //function to display nearby users
+        function displayNearby()
+        {
+
+        }
         // Create div to hold "nearby users" image and rate button
         var block  = document.createElement('div');
 
@@ -325,8 +330,8 @@ function findNearby(lat, lon)
 
 
             var elem = document.createElement("img");               // Create placeholder for "nearby user" image
-            var SelectUserBtn = document.createElement("BUTTON");   // Create rate user button for "nearby user"
-            var btnText = document.createTextNode(nearby[i].uid);   // Set text for "nearby user" rate user button
+            var SelectUserBtn = document.createElement("button");   // Create rate user button for "nearby user"
+            SelectUserBtn.innerHTML = nearby[i].uid;                // Set text for "nearby user" rate user button
 
             // Append "nearby user" image to div and set attributes
             block.appendChild(elem);
@@ -336,18 +341,22 @@ function findNearby(lat, lon)
 
             // Append "nearby user" rate user button to div and set attributes
             block.appendChild(SelectUserBtn);
-            SelectUserBtn.setAttribute("href", "#profile");
-            SelectUserBtn.setAttribute("data-role", "button");
-            SelectUserBtn.appendChild(btnText);
-
-            //document.write("\n");
-
+            SelectUserBtn.addEventListener("click", function(){
+                $.mobile.changePage('#profile', {transition: "pop", reverse: true});
+            });
+            
             console.log(name);
             console.log(nearby[i].uid);
             console.log(calculateDistance(nearby[i].latitude, nearby[i].longitude, lat, lon) + " distance away");
         }
 
     });
+}
+
+//function to display nearby users
+function displayNearby()
+{
+
 }
 
 // Calculates the distance between two coordinate points.
