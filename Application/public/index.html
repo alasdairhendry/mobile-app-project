@@ -96,7 +96,7 @@
         <div class="dropdown">
             <button onclick="ProfilePageMenuFunction()" class="dropbtn" data-icon="bullets"></button>
             <div id="myDropdown" class="dropdown-content" >
-                <a href="#NearbyUsers"  style="color: #fffdfb; text-decoration: none;">Find nearby users</a>
+                <a href="#NearbyUsers" onclick="displayNearby();"  style="color: #fffdfb; text-decoration: none;">Find nearby users</a>
                 <a href="#" onclick="userLogout(); return false;" style="color: #fffdfb; text-decoration: none;">Logout</a>
             </div>
         </div>
@@ -154,11 +154,11 @@
     <br>
     <div data-role="main">
         <div style="padding-right: 1%; padding-left: 1%; ">
-            <div data-role="header" data-theme="b"><h3>UserName</h3></div>
+            <div data-role="header" data-theme="b"><h3 id="otherProfileDisplayName">UserName</h3></div>
         </div>
     </div>
     <div style="padding: 15px 10px 10px 0px; width: 100%; height: auto;" >
-        <div> <img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 100%; height:auto; border-radius: 50%;" ></div>
+        <div> <img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 100%; height:auto; border-radius: 50%;" id="otherProfilePhoto" ></div>
     </div>
     <div class="ui-grid-d">
         <div class="ui-block-a"><a data-role="button" data-icon="star" data-iconpos="bottom" data-theme="b" id="Star1">1</a></div>
@@ -170,14 +170,14 @@
 
     <div data-role="content" data-theme="b"> <h4 align="center">Users Stats</h4>
         <div class="ui-grid-a" >
-            <div class="ui-block-a" style="padding-left: 10%;">User Average Rating</div>
-            <div class="ui-block-b" style="padding-right: 1%; text-align: center;">2.5</div>
+            <div class="ui-block-a" style="padding-left: 10%;">User Rating</div>
+            <div class="ui-block-b" style="padding-right: 1%; text-align: center;" id="otherProfileUserRating">2.5</div>
         </div>
         <br>
-        <div class="ui-grid-a">
-            <div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>
-            <div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>
-        </div>
+        <!--<div class="ui-grid-a">-->
+            <!--<div class="ui-block-a" style="padding-left: 10%; ">Ratings</div>-->
+            <!--<div class="ui-block-b" style="padding-right: 1%; text-align: center;">365</div>-->
+        <!--</div>-->
     </div>
     <br>
 
@@ -202,7 +202,10 @@
         <!--<div class="ui-block-a"><img src="http://bootdey.com/img/Content/avatar/avatar5.png" class="img-rounded" style="width: 60%; height:auto; border-radius: 50%; padding-top: 10px;" ></div>
         <div class="ui-block-b"style="width: 50%; height:auto; padding-top: 5px;"><a href="#profile" data-role="button" >User's name</a></div>
         <br>-->
-        <div id="nearbyUserList"></div>
+        <div id="nearbyUserList">
+
+
+        </div>
 
     </div>
     <br>

@@ -15,7 +15,8 @@ firebase.initializeApp(config);
 var uiConfig = {
     //signInSuccessUrl: ('#index-page'),
     //signInSuccessUrl: ('http://localhost:63342/Mobile%20App%20Assessment/mobile-app-project/Application/public/index.html?_ijt=97i8ujlbrs4kji67jr8aqlssm6&mode=select#feed-page'),
-    signInSuccessUrl: ('http://localhost:63342/Mobile App Assessment/mobile-app-project/Application/public/index.html?_ijt=l3fi3pemeps04paur9vduqm18g'),
+    // signInSuccessUrl: ('http://localhost:63342/Mobile App Assessment/mobile-app-project/Application/public/index.html?_ijt=l3fi3pemeps04paur9vduqm18g'),
+    signInSuccessUrl: ('http://localhost:63342/Application/public/index.html?_ijt=hq0mqu2ucj276dji5ei8pddi21'),
     signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
 
@@ -36,7 +37,7 @@ function loadFirebaseUI() {
 
 var nearby = [];
 var databaseUserSnapshot;
-var nearbyUserDistanceThreshold = 0.1;
+var nearbyUserDistanceThreshold = 10.1;
 var locationWatch;
 var locationWatchOptions;
 //var lat;
@@ -89,8 +90,8 @@ $(document).ready(function () {
             if(firebaseUser.photoURL !== null)
                 document.getElementById('profile-picture').src = firebaseUser.photoURL;
 
-            DEBUG_SendLocation(lat, lon);
-            findNearby()
+            // DEBUG_SendLocation(lat, lon);
+            findNearby();
         }
         else
         {
@@ -131,7 +132,7 @@ $(document).ready(function () {
             firebase.auth().currentUser.updateProfile({
                 photoURL: snapshot.downloadURL
             }).then(function () {
-
+                uploadPhotoToDatabase();
             }).catch(function (error) {
                 console.log(error);
             })
@@ -142,6 +143,12 @@ $(document).ready(function () {
         //getDatabaseUserSnap();
     });
 });
+
+function uploadPhotoToDatabase() {
+    firebase.database().ref("users/" + sessionStorage.getItem('userUID')).update({
+        imageURL: firebaseUser.photoURL
+    });
+}
 
 // Check if we currently have the logged in user registered in the real-time database. If not, we create them.
 function LoadOrCreate(firebaseUser)
@@ -155,6 +162,19 @@ function LoadOrCreate(firebaseUser)
             if(newItemValue.uid === firebaseUser.uid) {
                 accountFound = true;
 
+                if(firebaseUser.photoURL !== null)
+                {
+                    console.log("FOUND PHOTO IN AUTH PROFILE");
+                    firebase.database().ref("users/" + sessionStorage.getItem('userUID')).update({
+                        imageURL: firebaseUser.photoURL
+                    });
+                }
+                else
+                {
+                    console.log("DID NOT FOUND PHOTO IN AUTH PROFILE");
+                    console.log(firebaseUser);
+                }
+
                 // Hide "load profile Picture div"
                 if(firebaseUser.photoURL !== null) {
                     document.getElementById("ProfilePicBtnDiv").style.display = "none";
@@ -167,11 +187,13 @@ function LoadOrCreate(firebaseUser)
         // We didnt find this user, so we need to create an entry in the real-time database
         if(!accountFound)
         {
+            console.log("Account not found, creating database entry");
             firebase.database().ref("users/" + sessionStorage.getItem('userUID')).set({
                 email: firebaseUser.email,
                 firstName: sessionStorage.getItem('firstName'),
                 lastName: sessionStorage.getItem('lastName'),
                 rating: 2.5,
+                imageURL: "placeholder",
                 uid: firebaseUser.uid
             });
 
@@ -295,6 +317,67 @@ function getLocation()
 // Finds all users accounts within a distance threshold to the given lat & lon
 function findNearby(lat, lon)
 {
+    var nearbyUID = [];
+    nearby = [];
+
+    // Pull the location entries
+    firebase.database().ref("locations").once("value").then(function (snapshot) {
+
+        // Loop through the location entries
+        snapshot.forEach(function (t) {
+            var snapValue = t.val();
+
+            // Calculate the distance between the location entry and the given lat, lon ( the current users lat, lon)
+            var dist = calculateDistance(snapValue.latitude, snapValue.longitude, lat, lon);
+
+            // Check if the distance is less than the pre-set threshold
+            if(dist <= nearbyUserDistanceThreshold)
+            {
+                // Check to see that it isnt the current user in the entry
+                if(sessionStorage.getItem("userUID") != snapValue.uid)
+                {
+                    // Add the UID to the the nearbyUID array
+                    nearbyUID.push(snapValue.uid);
+                }
+            }
+
+        });
+
+        // Pull the users entries
+        firebase.database().ref("users").once("value").then(function(snapshot){
+
+            // Look through each of the users
+            snapshot.forEach(function (t) {
+
+                // Store the user information in a new variable
+                var userDatabaseSnapshot = t.val();
+
+                // Look through each of the nearby UID's
+                nearbyUID.forEach(function (t2) {
+
+                    // Store the nearby UID in a new variable
+                    var nearbyUIDEntry = t2;
+
+                    // Check if the nearby UID matches the current user entry we are looking at
+                    if(userDatabaseSnapshot.uid.toString() === nearbyUIDEntry.toString())
+                    {
+                        // If the two are a match, store the user's information in the Nearby array
+                        nearby.push(userDatabaseSnapshot);
+                        console.log(userDatabaseSnapshot);
+                        console.log("FOUND MATCH");
+                    }
+                });
+
+            });
+
+            // Display the nearby users
+            displayNearby();
+        });
+
+    });
+
+    /*
+    console.log("Finding nearby");
     nearby = [];
     firebase.database().ref("locations").once("value").then(function (snapshot) {
         snapshot.forEach(function (child) {
@@ -308,6 +391,7 @@ function findNearby(lat, lon)
             }
         });
 
+        console.log(nearby);
         //function to display nearby users
         function displayNearby()
         {
@@ -351,12 +435,102 @@ function findNearby(lat, lon)
         }
 
     });
+    */
 }
 
 //function to display nearby users
 function displayNearby()
 {
+    console.log("displayNearby() " + nearby.length + " users nearby");
+    var output = "<ul data-role='listview' data-inset='true' id='nearbyUserListView'>";
 
+    for (var i = 0; i < nearby.length; i++)
+    {
+        console.log ("Nearby UI " + nearby[i].firstName);
+        output += "<li> <a href='#' onclick='' name='nearbyUserProfileButton'>";
+        if(nearby[i].imageURL.toString() === "placeholder")
+        {
+            console.log("No ppppppp");
+            output += "<img src='http://bootdey.com/img/Content/avatar/avatar5.png' width='100%' height='100%'>";
+        }
+        else
+        {
+            output += "<img src=' " +  nearby[i].imageURL  + "' width='100%' height='100%'>";
+        }
+        output += "<h2>" + nearby[i].firstName + " " + nearby[i].lastName + "</h2>";
+        output += "<p>Rating " + nearby[i].rating.toFixed(2) + "</p>";
+        output += "</a> </li>";
+    }
+
+    output += "</ul>";
+
+    $('#nearbyUserList').html(output);
+    $('#nearbyUserList').trigger('create');
+
+    var buttons = document.getElementsByName("nearbyUserProfileButton");
+
+    for (var i = 0; i < buttons.length; i++)
+    {
+        console.log("boooaowadp");
+        buttons[i].onclick = function (num) {
+            return function () {
+                $.mobile.changePage('#profile', {transition: "pop", reverse: true});
+                displayOtherProfile(nearby[num]);
+                console.log(nearby[num]);
+            }
+        }(i);
+    }
+
+}
+
+var otherUserProfileTargetUID;
+var otherUserRatingListener;
+// Displays another users profile
+function displayOtherProfile(user) {
+    otherUserProfileTargetUID = user.uid;
+    $('#otherProfileDisplayName').html(user.firstName + " " + user.lastName);
+    $('#otherProfileUserRating').html(user.rating.toFixed(2));
+
+    if(user.imageURL.toString() === "placeholder")
+    {
+        $('#otherProfilePhoto').attr("src", "http://bootdey.com/img/Content/avatar/avatar5.png");
+    }
+    else
+    {
+        $('#otherProfilePhoto').attr("src", user.imageURL);
+    }
+
+    $('#Star1').unbind("click");
+    $('#Star2').unbind("click");
+    $('#Star3').unbind("click");
+    $('#Star4').unbind("click");
+    $('#Star5').unbind("click");
+
+    $('#Star1').click(function () {
+        rateUser(user.uid, 1.0, "");
+    })
+
+    $('#Star2').click(function () {
+        rateUser(user.uid, 2.0, "");
+    })
+
+    $('#Star3').click(function () {
+        rateUser(user.uid, 3.0, "");
+    })
+
+    $('#Star4').click(function () {
+        rateUser(user.uid, 4.0, "");
+    })
+
+    $('#Star5').click(function () {
+        rateUser(user.uid, 5.0, "");
+    })
+
+    // Firebase Callback function which listens to the ratings of this users database entry. Whenever their database entries change then we will update their rating
+    otherUserRatingListener = firebase.database().ref('users/' + user.uid);
+    otherUserRatingListener.on('value', function(snapshot) {
+        calculateOtherUsersRating(user);
+    });
 }
 
 // Calculates the distance between two coordinate points.
@@ -419,6 +593,7 @@ function rateUser(targetUID, rating, message)
                 email: user.email,
                 firstName: user.firstName,
                 lastName: user.lastName,
+                imageURL: user.imageURL,
                 rating: userRating,
                 uid: user.uid
             });
@@ -453,17 +628,46 @@ function calculateUsersRating() {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 rating: userRating,
+                imageURL: user.imageURL,
                 uid: user.uid
             });
         });
 
-        $('#your-rating').html(userRating);
-
-        /*var ratingsRecieved = firebase.database().ref("ratings/"
-            + sessionStorage.getItem('userUID')).ratings.numChildren();
-
-        $('#ratings-recieved').html(ratingsRecieved);*/
+        $('#your-rating').html(userRating.toFixed(2));
     });
+}
+
+function calculateOtherUsersRating(user) {
+
+    console.log(user.uid.toString() + " ---- " + "Target User - " + otherUserProfileTargetUID.toString());
+    if(user.uid.toString() === otherUserProfileTargetUID.toString()) {
+
+        firebase.database().ref("ratings/" + user.uid).once('value').then(function (snapshot) {
+            var overall = 0;
+            var ratings = 0;
+            var ratingsArray = snapshot.val().ratings;
+            var uidsArray = snapshot.val().uids;
+
+            for (var i = 0, len = ratingsArray.length; i < len; i++) {
+                overall += parseFloat(ratingsArray[i]);
+                ratings++;
+            }
+
+            var userRating = 2.5;
+            userRating = overall / ratingsArray.length;
+
+            firebase.database().ref("users/" + user.uid).set({
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                rating: userRating,
+                imageURL: user.imageURL,
+                uid: user.uid
+            });
+
+            $('#otherProfileUserRating').html(userRating.toFixed(2));
+        });
+    }
 }
 
 function ratingsRecieved()
