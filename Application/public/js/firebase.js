@@ -37,7 +37,7 @@ function loadFirebaseUI() {
 
 var nearby = [];
 var databaseUserSnapshot;
-var nearbyUserDistanceThreshold = 10.1;
+var nearbyUserDistanceThreshold = 1000.1;
 var locationWatch;
 var locationWatchOptions;
 //var lat;
