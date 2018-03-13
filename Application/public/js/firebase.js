@@ -78,7 +78,7 @@ $(document).ready(function () {
 
             // Update the welcome message
             firebase.database().ref("users/" + sessionStorage.getItem('userUID')).once('value').then(function (snapshot) {
-                $('#welcome-message').html("<b>Welcome,</b> " + firstName + " " + lastName + "!");
+                $('#welcome-message').html(firstName + " " + lastName);
 
                 console.log("User Logged In " + snapshot.val().email)
             });
@@ -491,6 +491,27 @@ function displayOtherProfile(user) {
     $('#otherProfileDisplayName').html(user.firstName + " " + user.lastName);
     $('#otherProfileUserRating').html(user.rating.toFixed(2));
 
+    if(user.rating >= 1)
+    {
+        $('#profile').css("background", "#FF0E00");
+    }
+    if(user.rating >= 2)
+    {
+        $('#profile').css("background", "#FF885B");
+    }
+    if(user.rating >= 3)
+    {
+        $('#profile').css("background", "#FFC5C3");
+    }
+    if(user.rating >= 4)
+    {
+        $('#profile').css("background", "#9aff82");
+    }
+    if(user.rating >= 5)
+    {
+        $('#profile').css("background", "#38ff1e");
+    }
+
     if(user.imageURL.toString() === "placeholder")
     {
         $('#otherProfilePhoto').attr("src", "http://bootdey.com/img/Content/avatar/avatar5.png");
@@ -508,22 +529,27 @@ function displayOtherProfile(user) {
 
     $('#Star1').click(function () {
         rateUser(user.uid, 1.0, "");
+        $.mobile.changePage('#NearbyUsers', {transition : "pop", reverse : true});
     })
 
     $('#Star2').click(function () {
         rateUser(user.uid, 2.0, "");
+        $.mobile.changePage('#NearbyUsers', {transition : "pop", reverse : true});
     })
 
     $('#Star3').click(function () {
         rateUser(user.uid, 3.0, "");
+        $.mobile.changePage('#NearbyUsers', {transition : "pop", reverse : true});
     })
 
     $('#Star4').click(function () {
         rateUser(user.uid, 4.0, "");
+        $.mobile.changePage('#NearbyUsers', {transition : "pop", reverse : true});
     })
 
     $('#Star5').click(function () {
         rateUser(user.uid, 5.0, "");
+        $.mobile.changePage('#NearbyUsers', {transition : "pop", reverse : true});
     })
 
     // Firebase Callback function which listens to the ratings of this users database entry. Whenever their database entries change then we will update their rating
